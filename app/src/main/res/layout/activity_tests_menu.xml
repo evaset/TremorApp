@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:backgroundTint="@color/primary"
+    tools:context=".TestsMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/menu"
+            android:textAllCaps="true"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbTest1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+
+            android:enabled="false"
+            android:text="@string/test1" />
+
+        <CheckBox
+            android:id="@+id/cbTest2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+
+            android:enabled="false"
+            android:text="@string/test2" />
+
+        <CheckBox
+            android:id="@+id/cbTest3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test3"
+
+            android:enabled="false"
+            android:layout_marginBottom="8dp"/>
+
+        <CheckBox
+            android:id="@+id/cbTest4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test4"
+
+            android:enabled="false"
+            android:layout_marginBottom="8dp"/>
+
+        <CheckBox
+            android:id="@+id/cbTest5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test5"
+
+            android:enabled="false"
+            android:layout_marginBottom="8dp"/>
+
+        <CheckBox
+            android:id="@+id/cbTest6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test6"
+            android:enabled="false"
+            android:layout_marginBottom="8dp"/>
+
+        <CheckBox
+            android:id="@+id/cbTest7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test7"
+
+            android:enabled="false"
+            android:layout_marginBottom="8dp"/>
+
+    </LinearLayout>
+
+
+
+</ScrollView>

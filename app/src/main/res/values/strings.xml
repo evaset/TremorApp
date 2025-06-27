@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">TremorApp</string>
+
+    //Log-in
+    <string name="login_text">Ingresa el nombre de usuario</string>
+    <string name="login_hint">Ej:control_1</string>
+    <string name="continue_button">Continuar</string>
+
+    //TestsMenu
+    <string name="menu">Menu</string>
+    <string name="test1">Test 1</string>
+    <string name="test2">Test 2</string>
+    <string name="test3">Test 3</string>
+    <string name="test4">Test 4</string>
+    <string name="test5">Test 5</string>
+    <string name="test6">Test 6</string>
+    <string name="test7">Test 7</string>
+</resources>
