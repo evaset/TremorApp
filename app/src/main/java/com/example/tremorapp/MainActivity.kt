@@ -3,12 +3,12 @@ package com.example.tremorapp
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.tremorapp.databinding.ActivityMainBinding
 
 
 
-class MainActivity : AppCompactActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
