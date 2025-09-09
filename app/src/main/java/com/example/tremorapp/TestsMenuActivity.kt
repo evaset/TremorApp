@@ -19,6 +19,10 @@ class TestsMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTestsMenuBinding
     private lateinit var sharedPref: SharedPreferences
 
+    private val currentUser: String by lazy {
+        sharedPref.getString("username", "") ?: ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTestsMenuBinding.inflate(layoutInflater)
@@ -34,59 +38,63 @@ class TestsMenuActivity : AppCompatActivity() {
         updateCheckboxStates()
     }
 
+    private fun getTestCompletionKey(testNumber: Int): String {
+        return "${currentUser}_test${testNumber}_completed"
+    }
+
     private fun setupTestButtons() {
         binding.btnTest1.setOnClickListener {
             launchTestActivity(
                 Test1Activity::class.java,
-                "test1_completed",
+                1,
                 binding.cbTest1
             )
         }
         binding.btnTest2.setOnClickListener {
             launchTestActivity(
                 Test2Activity::class.java,
-                "test2_completed",
+                2,
                 binding.cbTest2
             )
         }
         binding.btnTest3.setOnClickListener {
             launchTestActivity(
                 Test3Activity::class.java,
-                "test3_completed",
+                3,
                 binding.cbTest3
             )
         }
         binding.btnTest4.setOnClickListener {
             launchTestActivity(
                 Test4Activity::class.java,
-                "test4_completed",
+                4,
                 binding.cbTest4
             )
         }
         binding.btnTest5.setOnClickListener {
             launchTestActivity(
                 Test5Activity::class.java,
-                "test5_completed",
+                5,
                 binding.cbTest5
             )
         }
         binding.btnTest6.setOnClickListener {
             launchTestActivity(
                 Test6Activity::class.java,
-                "test6_completed",
+                6,
                 binding.cbTest6
             )
         }
         binding.btnTest7.setOnClickListener {
             launchTestActivity(
                 Test7Activity::class.java,
-                "test7_completed",
+                7,
                 binding.cbTest7
             )
         }
     }
 
-    private fun launchTestActivity(activityClass: Class<*>, prefKey: String, checkbox: CheckBox) {
+    private fun launchTestActivity(activityClass: Class<*>, testNumber: Int, checkbox: CheckBox) {
         val intent = Intent(this, activityClass)
         startActivityForResult(intent, checkbox.id) //ID del checkbox como requestCode
     }
@@ -99,17 +107,24 @@ class TestsMenuActivity : AppCompatActivity() {
     }
 
     private fun updateCheckboxStates() {
-        updateCheckboxState("test1_completed", binding.cbTest1)
-        updateCheckboxState("test2_completed", binding.cbTest2)
-        updateCheckboxState("test3_completed", binding.cbTest3)
-        updateCheckboxState("test4_completed", binding.cbTest4)
-        updateCheckboxState("test5_completed", binding.cbTest5)
-        updateCheckboxState("test6_completed", binding.cbTest6)
-        updateCheckboxState("test7_completed", binding.cbTest7)
+        updateCheckboxState(1, binding.cbTest1)
+        updateCheckboxState(2, binding.cbTest2)
+        updateCheckboxState(3, binding.cbTest3)
+        updateCheckboxState(4, binding.cbTest4)
+        updateCheckboxState(5, binding.cbTest5)
+        updateCheckboxState(6, binding.cbTest6)
+        updateCheckboxState(7, binding.cbTest7)
     }
 
-    private fun updateCheckboxState(prefKey: String, checkbox: CheckBox) {
-        checkbox.isChecked = sharedPref.getBoolean(prefKey, false)
+    private fun updateCheckboxState(testNumber: Int, checkbox: CheckBox) {
+        // Verificar tanto SharedPreferences como archivo de datos
+        val prefKey = "${currentUser}_test${testNumber}_completed"
+        val hasData = filesDir.listFiles { file ->
+            file.name.startsWith("test${testNumber}_") && file.name.contains("_${currentUser}_")
+        }?.isNotEmpty() ?: false
+
+        checkbox.isChecked =
+            sharedPref.getBoolean(prefKey, false) && hasData
         checkbox.isEnabled = false //Deshabilitar la interacción manual
     }
 
@@ -118,20 +133,20 @@ class TestsMenuActivity : AppCompatActivity() {
 
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                binding.cbTest1.id -> markTestAsCompleted("test1_completed", binding.cbTest1)
-                binding.cbTest2.id -> markTestAsCompleted("test2_completed", binding.cbTest2)
-                binding.cbTest3.id -> markTestAsCompleted("test3_completed", binding.cbTest3)
-                binding.cbTest4.id -> markTestAsCompleted("test4_completed", binding.cbTest4)
-                binding.cbTest5.id -> markTestAsCompleted("test5_completed", binding.cbTest5)
-                binding.cbTest6.id -> markTestAsCompleted("test6_completed", binding.cbTest6)
-                binding.cbTest7.id -> markTestAsCompleted("test7_completed", binding.cbTest7)
+                binding.cbTest1.id -> markTestAsCompleted(1, binding.cbTest1)
+                binding.cbTest2.id -> markTestAsCompleted(2, binding.cbTest2)
+                binding.cbTest3.id -> markTestAsCompleted(3, binding.cbTest3)
+                binding.cbTest4.id -> markTestAsCompleted(4, binding.cbTest4)
+                binding.cbTest5.id -> markTestAsCompleted(5, binding.cbTest5)
+                binding.cbTest6.id -> markTestAsCompleted(6, binding.cbTest6)
+                binding.cbTest7.id -> markTestAsCompleted(7, binding.cbTest7)
             }
         }
     }
 
-    private fun markTestAsCompleted(prefKey: String, checkbox: CheckBox) {
+    private fun markTestAsCompleted(testNumber: Int, checkbox: CheckBox) {
         with(sharedPref.edit()) {
-            putBoolean(prefKey, true)
+            putBoolean(getTestCompletionKey(testNumber), true)
             apply()
         }
         checkbox.isChecked = true

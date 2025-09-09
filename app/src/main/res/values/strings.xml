@@ -16,4 +16,38 @@
     <string name="test6">Test 6</string>
     <string name="test7">Test 7</string>
     <string name="data">Ver Datos</string>
+
+    //Tests
+    <string name="start">Comenzar</string>
+
+    <string name="test1_description">Presiona repetidamente la tecla "k" durante 15 segundos.</string>
+
+    <string name="test2_description">Copia la frase que aparece en pantalla exactamente como está escrita. Puedes borrar si cometes un error. El ejercicio terminará cuando hayas escrito la frase correctamente.</string>
+    <string name="test2_sentence">Lupra zenok tir</string>
+
+    <string name="test3_description">Escribe las siguientes secuencias de teclas. Cuando termines una secuencia, aparecerá la siguiente en pantalla. Solo podrás continuar si la secuencia anterior está escrita exactamente igual. Puedes corregir si te equivocas.</string>
+    <string name="test3_sentence">qwe asd zxc iop jkl bnm</string>
+
+    <string name="test4_description">Copia la frase que aparece en pantalla. Debes escribirla exactamente igual para poder terminar el ejercicio. Puedes corregir si te equivocas.
+Mientras escribes, verás un círculo que cambia de color.
+Al final del ejercicio, tendrás que indicar cuántas veces cambió de color.</string>
+    <string name="test4_color_change">¿Cuántas veces cambió el color?</string>
+
+    <string name="test5_description">Pulsa la tecla "k" cada vez que escuches el sonido. Sigue el ritmo durante 15 segundos. Si te equivocas, no borres nada y continúa con el ejercicio.</string>
+
+    <string name="test6_description">Escribe la frase que aparece en pantalla lo más rápido que puedas.Puedes corregir si te equivocas. El test terminará cuando escribas la frase correctamente o pasen 15 segundos.</string>
+    <string name="test6_sentence">Zubren kial trof menuc dilas</string>
+
+    <string name="test7_description">Escribe el texto que aparecerá en pantalla, en bloques de cinco palabras. Después de cada bloque, espera a que la app te indique que puedes continuar.</string>
+    <string name="test7_nextblock">Siguiente Bloque</string>
+    <string name="test7_complete">Texto completo:</string>
+    <string name="test7_sentence_1">El sol brilla sobre el</string>
+    <string name="test7_sentence_2">lago. Los niños juegan</string>
+    <string name="test7_sentence_3">en la orilla. Un perro</string>
+    <string name="test7_sentence_4">ladra desde la barca.</string>
+    <string name="test7_sentence_5">Todos ríen bajo el cielo.</string>
+
+    //ViewData
+    <string name="export_data">Exportar datos</string>
+
 </resources>

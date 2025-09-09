@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="button">#F06292</color>
-    <color name="login">#4DD0E1</color>
-    <color name="primary">#FFF9C4</color>
-    <color name="secondary">#FFF176</color>
-    <color name="data">#9575CD</color>
+    <color name="button">#4FC3F7</color>
+    <color name="login">#4DB6AC</color>
+    <color name="primary">#E3F2FD</color>
+    <color name="secondary">#90CAF9</color>
+    <color name="data">#E57373</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    // Colores circulo
+    <color name="red">#EF5350</color>
+    <color name="blue">#42A5F5</color>
+    <color name="green">#9CCC65</color>
+    <color name="yellow">#FFCA28</color>
+    <color name="purple">#AB47BC</color>
 </resources>

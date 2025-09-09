@@ -1,10 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primary"
+    android:padding="16dp"
     tools:context=".tests.Test7Activity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test7"
+        android:textColor="@color/black"
+        android:textAllCaps="true"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tvInstruction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        android:text="@string/test7_description"/>
+    <!-- TextView para mostrar el bloque actual -->
+    <TextView
+        android:id="@+id/tvSentence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+    <!-- Botón Siguiente Bloque (REQUERIDO por el código) -->
+    <Button
+        android:id="@+id/btnNextBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:text="@string/test7_nextblock"
+        android:visibility="gone"
+        android:enabled="false"/>
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/secondary"
+        android:text="@string/start"/>
+
+    <TextView
+        android:id="@+id/tvCountdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/etInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:inputType="text"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:cursorVisible="true"
+        android:background="@null"
+        android:visibility="gone"/>
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"/>
+
+    <!-- Bloques. Mostrar uno a uno -->
+    <TextView
+        android:id="@+id/tvAllBlocksTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/test7_complete"
+        android:textColor="@color/black"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvSentence1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:text="@string/test7_sentence_1"/>
+
+    <TextView
+        android:id="@+id/tvSentence2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:text="@string/test7_sentence_2"/>
+
+    <TextView
+        android:id="@+id/tvSentence3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:text="@string/test7_sentence_3"/>
+
+    <TextView
+        android:id="@+id/tvSentence4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:text="@string/test7_sentence_4"/>
+
+    <TextView
+        android:id="@+id/tvSentence5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:text="@string/test7_sentence_5"/>
+
+</LinearLayout>
