@@ -37,12 +37,17 @@ class Test1Activity : AppCompatActivity() {
     )
 
     private val keyEvents = mutableListOf<KeyPressData>()
+    private lateinit var testTimer: CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTest1Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configurar el listener del botón de retroceso
+        binding.btnBackMenu.setOnClickListener {
+            finish() // Cierra esta activity y vuelve a la anterior
+        }
         setupTest()
     }
 
@@ -103,6 +108,7 @@ class Test1Activity : AppCompatActivity() {
 
     private fun startCountdown() {
         binding.btnStart.isEnabled = false
+        binding.btnStart.visibility = View.GONE
         binding.tvCountdown.visibility = View.VISIBLE
 
         object : CountDownTimer(3000, 1000) {
@@ -166,7 +172,7 @@ class Test1Activity : AppCompatActivity() {
 
     private fun saveTestData() {
         try {
-            val totalTime = 1500L
+            val totalTime = 15000L
             val totalPresses = keyEvents.count {it.action == "INSERT" }
             val kPresses = keyEvents.count {it.action == "INSERT" && it.char?.lowercaseChar() == 'k' }
             val otherPresses = totalPresses - kPresses
@@ -242,13 +248,13 @@ class Test1Activity : AppCompatActivity() {
         // Limpiar el campo de texto y habilitarlo
         binding.etInput.text.clear()
         binding.etInput.isEnabled = true
-        // Restablecer la visibilidad y el estado de los elementos
         binding.etInput.visibility = View.GONE
         // Detener y ocultar cronómetro
         binding.chronometer.visibility = View.GONE
         binding.chronometer.stop()
-        //Reactivar el botón de inicio
+        //Reactivar el botón de inicio y hacerlo visible
         binding.btnStart.isEnabled = true
+        binding.btnStart.visibility = View.VISIBLE
         //Restablecer el contador
         binding.tvCountdown.text = ""
         // Reiniciar estado del test

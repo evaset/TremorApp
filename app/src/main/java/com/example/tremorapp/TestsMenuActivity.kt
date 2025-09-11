@@ -19,6 +19,7 @@ class TestsMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTestsMenuBinding
     private lateinit var sharedPref: SharedPreferences
 
+    // Propiedad lazy para obtener el nombre del usuario actual
     private val currentUser: String by lazy {
         sharedPref.getString("username", "") ?: ""
     }
@@ -28,10 +29,18 @@ class TestsMenuActivity : AppCompatActivity() {
         binding = ActivityTestsMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Inicializar el SharedPreferences
         sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
+
+        // Configurar el listener del botón de retroceso
+        binding.btnBack.setOnClickListener {
+            finish() // Cierra esta activity y vuelve a la anterior
+        }
+
         initUi()
     }
 
+    // Función para inicializar la iterfaz del usuario
     private fun initUi() {
         setupTestButtons()
         setupViewDataButton()
@@ -42,6 +51,7 @@ class TestsMenuActivity : AppCompatActivity() {
         return "${currentUser}_test${testNumber}_completed"
     }
 
+    // Función para configurar los listeners de los botones de tests
     private fun setupTestButtons() {
         binding.btnTest1.setOnClickListener {
             launchTestActivity(
@@ -94,11 +104,13 @@ class TestsMenuActivity : AppCompatActivity() {
         }
     }
 
+    // Función para lanzar una actividad de test
     private fun launchTestActivity(activityClass: Class<*>, testNumber: Int, checkbox: CheckBox) {
         val intent = Intent(this, activityClass)
         startActivityForResult(intent, checkbox.id) //ID del checkbox como requestCode
     }
 
+    // Función para configurar el botón de ver datos
     private fun setupViewDataButton() {
         binding.btnViewData.setOnClickListener {
             val intent = Intent(this, ViewDataActivity::class.java)
@@ -106,6 +118,7 @@ class TestsMenuActivity : AppCompatActivity() {
         }
     }
 
+    // Función para actualizar el estado de todos los checkboxes
     private fun updateCheckboxStates() {
         updateCheckboxState(1, binding.cbTest1)
         updateCheckboxState(2, binding.cbTest2)
@@ -116,6 +129,7 @@ class TestsMenuActivity : AppCompatActivity() {
         updateCheckboxState(7, binding.cbTest7)
     }
 
+    // Función para actualizar el estado de un checkbox individual
     private fun updateCheckboxState(testNumber: Int, checkbox: CheckBox) {
         // Verificar tanto SharedPreferences como archivo de datos
         val prefKey = "${currentUser}_test${testNumber}_completed"
@@ -123,14 +137,16 @@ class TestsMenuActivity : AppCompatActivity() {
             file.name.startsWith("test${testNumber}_") && file.name.contains("_${currentUser}_")
         }?.isNotEmpty() ?: false
 
-        checkbox.isChecked =
-            sharedPref.getBoolean(prefKey, false) && hasData
-        checkbox.isEnabled = false //Deshabilitar la interacción manual
+        // Marcar como complero solo si existe en ambos lugares
+        checkbox.isChecked = sharedPref.getBoolean(prefKey, false) && hasData
+        checkbox.isEnabled = false // Deshabilitar la interacción manual
     }
 
+    /* Método que maneja los resultados de actividades lanzadas con startActivityForResult */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        // Si el resultado es exitoso, marcar el test como oompletado
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 binding.cbTest1.id -> markTestAsCompleted(1, binding.cbTest1)
@@ -144,6 +160,7 @@ class TestsMenuActivity : AppCompatActivity() {
         }
     }
 
+    // Función para marcar un test como completado en SharedPreferences
     private fun markTestAsCompleted(testNumber: Int, checkbox: CheckBox) {
         with(sharedPref.edit()) {
             putBoolean(getTestCompletionKey(testNumber), true)
@@ -152,9 +169,10 @@ class TestsMenuActivity : AppCompatActivity() {
         checkbox.isChecked = true
     }
 
+    // Metodo que se ejecuta cuando la actividad se reanuda
     override fun onResume() {
         super.onResume()
-        updateCheckboxStates() //Actualizar estados al volver a Tests Menu
+        updateCheckboxStates() // Actualizar estados al volver a Tests Menu
     }
 }
 

@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="button">#4FC3F7</color>
+    <color name="primary">#F9FAFB</color>
+    <color name="secondary">#0F4275</color>
+
+    <color name="instructions">#666666</color>
+    <color name="timer">#0D47A1</color>
+    <color name="hint">#757575</color>
+
+    <color name="data">#4CAF50</color>
+    <color name="button">#2196F3</color>
     <color name="login">#4DB6AC</color>
-    <color name="primary">#E3F2FD</color>
-    <color name="secondary">#90CAF9</color>
-    <color name="data">#E57373</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    // Colores campo de texto
+    <color name="background">#F9FAFB</color>
+    <color name="border">#CCCCCC</color>
 
     // Colores circulo
     <color name="red">#EF5350</color>
