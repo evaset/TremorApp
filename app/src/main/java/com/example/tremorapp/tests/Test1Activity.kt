@@ -1,6 +1,5 @@
 package com.example.tremorapp.tests
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -23,12 +22,14 @@ import java.util.Locale
 class Test1Activity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTest1Binding
+
+    // Variables para controlar el estado y tiempo del test
     private var testStarted = false
     private var startTime: Long = 0
     private var lastTextChangeTime: Long = 0
     private var lastText: String = ""
 
-    // Modelo para guardar datos
+    // Modelo de datos para registrar eventos de teclado
     data class KeyPressData(
         val timestamp: Long,      // Momento del evento (ms desde inicio)
         val action: String,       // "INSERT" o "DELETE"
@@ -36,9 +37,10 @@ class Test1Activity : AppCompatActivity() {
         val currentText: String   // Texto completo en ese momento
     )
 
+    // Lista para almacenar todos los eventos de teclado
     private val keyEvents = mutableListOf<KeyPressData>()
-    private lateinit var testTimer: CountDownTimer
 
+    // Metodo que se ejecuta cuando la actividad es creada
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTest1Binding.inflate(layoutInflater)
@@ -46,11 +48,17 @@ class Test1Activity : AppCompatActivity() {
 
         // Configurar el listener del botón de retroceso
         binding.btnBackMenu.setOnClickListener {
-            finish() // Cierra esta activity y vuelve a la anterior
+            if (testStarted) {
+                Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                finish()
+            }
         }
         setupTest()
     }
 
+    // Manejar el botón de retroceso físico del dispositivo
     override fun onBackPressed() {
         if (testStarted) {
             Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT).show()
@@ -59,15 +67,16 @@ class Test1Activity : AppCompatActivity() {
         }
     }
 
+    // Función para configurar el test
     private fun setupTest() {
         binding.btnStart.setOnClickListener {
             startCountdown()
         }
 
-        // Configurar TextWatcher
+        // Configurar TextWatcher para detectar cambios en el texto
         binding.etInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                lastText = s?.toString() ?: ""
+                lastText = s?.toString() ?: ""  // Guardar el texto actual antes del cambio
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -80,21 +89,25 @@ class Test1Activity : AppCompatActivity() {
                 if (newText.length > lastText.length) {
                     // Carácter insertado
                     val newChar = newText.last()
-                    keyEvents.add(KeyPressData(
-                        timestamp = currentTime,
-                        action = "INSERT",
-                        char = newChar,
-                        currentText = newText
-                    ))
+                    keyEvents.add(
+                        KeyPressData(
+                            timestamp = currentTime,
+                            action = "INSERT",
+                            char = newChar,
+                            currentText = newText
+                        )
+                    )
                     Log.d("KeyPress", "INSERT '$newChar' at $currentTime ms")
                 } else if (newText.length < lastText.length) {
                     // Carácter borrado
-                    keyEvents.add(KeyPressData(
-                        timestamp = currentTime,
-                        action = "DELETE",
-                        char = null,
-                        currentText = newText
-                    ))
+                    keyEvents.add(
+                        KeyPressData(
+                            timestamp = currentTime,
+                            action = "DELETE",
+                            char = null,
+                            currentText = newText
+                        )
+                    )
                     Log.d("KeyPress", "DELETE at $currentTime ms")
                 }
 
@@ -106,6 +119,7 @@ class Test1Activity : AppCompatActivity() {
         })
     }
 
+    // Función para iniciar la cuenta regresiva de 3 segundos
     private fun startCountdown() {
         binding.btnStart.isEnabled = false
         binding.btnStart.visibility = View.GONE
@@ -122,8 +136,9 @@ class Test1Activity : AppCompatActivity() {
         }.start()
     }
 
-    @SuppressLint("ServiceCast")
+    // Función para iniciar el test
     private fun startTest() {
+
         testStarted = true
         keyEvents.clear()
         startTime = System.currentTimeMillis()
@@ -147,17 +162,20 @@ class Test1Activity : AppCompatActivity() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.etInput, InputMethodManager.SHOW_IMPLICIT)
 
-        // Temporizador de 15 segundos
+        // Temporizador de 15 segundos para el test
         object : CountDownTimer(15000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                binding.tvCountdown.text = "${millisUntilFinished/1000+1}s"
+                binding.tvCountdown.text = "${millisUntilFinished / 1000 + 1}s"
             }
+
             override fun onFinish() {
                 binding.chronometer.stop()
-                endTest() }
+                endTest()
+            }
         }.start()
     }
 
+    // Función para finalizar el test
     private fun endTest() {
         testStarted = false
         binding.etInput.clearFocus()
@@ -166,26 +184,32 @@ class Test1Activity : AppCompatActivity() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etInput.windowToken, 0)
 
-        saveTestData()
         showResults()
     }
 
+    // Función para guardar los datos del test
     private fun saveTestData() {
         try {
             val totalTime = 15000L
-            val totalPresses = keyEvents.count {it.action == "INSERT" }
-            val kPresses = keyEvents.count {it.action == "INSERT" && it.char?.lowercaseChar() == 'k' }
+            val totalPresses = keyEvents.count { it.action == "INSERT" }
+            val kPresses =
+                keyEvents.count { it.action == "INSERT" && it.char?.lowercaseChar() == 'k' }
             val otherPresses = totalPresses - kPresses
             val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
             val username = sharedPref.getString("username", "unknown") ?: "unknown"
-            val accuracy = if (totalPresses > 0) (kPresses.toDouble()/totalPresses * 100) else 0.0
-            val speed = if (totalTime > 0 ) totalPresses / (totalTime/1000.0) else 0.0
+            val accuracy = if (totalPresses > 0) (kPresses.toDouble() / totalPresses * 100) else 0.0
+            val speed = if (totalTime > 0) totalPresses / (totalTime / 1000.0) else 0.0
 
             // Crear JSON con los datos
             val testData = JSONObject().apply {
                 put("test_name", "test1")
                 put("username", username)
-                put("start_time", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(startTime)))
+                put(
+                    "start_time",
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
+                        Date(startTime)
+                    )
+                )
                 put("total_time_ms", totalTime)
                 put("total_presses", totalPresses)
                 put("total_k_presses", kPresses)
@@ -194,7 +218,7 @@ class Test1Activity : AppCompatActivity() {
                 put("speed_keystrokes_per_sec", speed)
                 put("final_text", binding.etInput.text.toString())
 
-                // Agregar todos los eventos de 'k'
+                // Agregar todos los eventos de teclas
                 val eventsArray = JSONArray()
                 keyEvents.filter { it.action == "INSERT" }.forEach { event ->
                     JSONObject().apply {
@@ -206,44 +230,46 @@ class Test1Activity : AppCompatActivity() {
                 put("key_events", eventsArray)
             }
 
-            // Guardar archivo
+            // Guardar archivo JSON
             val fileName = "test1_${getUsername()}_${System.currentTimeMillis()}.json"
             File(filesDir, fileName).writeText(testData.toString())
 
-            sharedPref.edit().putBoolean("test1_completed", true).apply()
-            Log.d("Test1", "Datos guardados correctamente")
+
+            //Marcar test como completado para este usuario
+            with(sharedPref.edit()) {
+                putBoolean("${getUsername()}_test1_completed", true)
+                apply()
+            }
+
+            setResult(RESULT_OK)
         } catch (e: Exception) {
             Log.e("Test1", "Error al guardar datos", e)
+            setResult(RESULT_CANCELED)
         }
+    }
 
-        //Marcar test como completado para este usuario
-        val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        with(sharedPref.edit()){
-            putBoolean("${getUsername()}_test1_completed", true)
-            apply()
-        }
-
-        setResult(RESULT_OK)}
-
-    private fun getUsername(): String{
+    // Función para obtener el nombre del usuario
+    private fun getUsername(): String {
         return getSharedPreferences("app_prefs", MODE_PRIVATE)
-            .getString("username", "")?:""
+            .getString("username", "") ?: ""
 
     }
 
-
+    // Función para mostrar los resultados y opciones al usuario
     private fun showResults() {
         AlertDialog.Builder(this)
             .setTitle("Test completado")
             .setMessage("¿Qué deseas hacer?")
             .setPositiveButton("Guardar datos") { _, _ ->
                 saveTestData()
-                finish() }
+                finish()
+            }
             .setNegativeButton("Repetir test") { _, _ -> resetTest() }
             .setCancelable(false)
             .show()
     }
 
+    // Función para reiniciar el test
     private fun resetTest() {
         // Limpiar el campo de texto y habilitarlo
         binding.etInput.text.clear()

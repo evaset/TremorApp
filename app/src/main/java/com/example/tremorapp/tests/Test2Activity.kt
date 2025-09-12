@@ -1,6 +1,5 @@
 package com.example.tremorapp.tests
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -23,13 +22,17 @@ import android.view.inputmethod.InputMethodManager
 class Test2Activity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTest2Binding
+
+    // Variables para controlar el estado y tiempo del test
     private var testStarted = false
     private var startTime: Long = 0
     private var endTime: Long = 0
     private var lastText: String = ""
+
+    // Texto objetivo que el usuario debe copiar
     private val targetText = "Lupra zenok tir"
 
-    // Modelo para guardar datos
+    // Modelo de datos para registrar eventos de teclado
     data class KeyPressData(
         val timestamp: Long,      // Momento del evento (ms desde inicio)
         val action: String,       // "INSERT" o "DELETE"
@@ -38,16 +41,28 @@ class Test2Activity : AppCompatActivity() {
         val correct: Boolean      // Si el carácter es correcto
     )
 
+    // Lista para almacenar todos los eventos del teclado
     private val keyEvents = mutableListOf<KeyPressData>()
 
+    // Metodo que se ejecuta cuando la actividad es creada
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTest2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configurar el listener del botón de retroceso
+        binding.btnBackMenu.setOnClickListener {
+            if (testStarted) {
+                Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                finish()
+            }
+        }
         setupTest()
     }
 
+    // Manejar el botón de retroceso físico del dispositivo
     override fun onBackPressed() {
         if (testStarted) {
             Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT).show()
@@ -56,18 +71,17 @@ class Test2Activity : AppCompatActivity() {
         }
     }
 
+    // Función para configurar el test
     private fun setupTest() {
-        // Mostrar la frase a copiar
-        binding.tvSentence.text = targetText
-
+        binding.tvSentence.text = targetText    // Mostrar la frase a copiar
         binding.btnStart.setOnClickListener {
             startCountdown()
         }
 
-        // Configurar TextWatcher
+        // Configurar TextWatcher para detectar cambios en el texto
         binding.etInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                lastText = s?.toString() ?: ""
+                lastText = s?.toString() ?: ""  // Guardar el texto actual antes del cambio
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -109,7 +123,7 @@ class Test2Activity : AppCompatActivity() {
                 lastText = newText
 
                 // Verificar si completó la frase
-                if (newText.equals(targetText, ignoreCase = true)){
+                if (newText.equals(targetText, ignoreCase = true)) {
                     endTest()
                 }
             }
@@ -118,8 +132,10 @@ class Test2Activity : AppCompatActivity() {
         })
     }
 
+    // Función para iniciar la cuenta regresiva de 3 segundos
     private fun startCountdown() {
         binding.btnStart.isEnabled = false
+        binding.btnStart.visibility = View.GONE
         binding.tvCountdown.visibility = View.VISIBLE
 
         object : CountDownTimer(3000, 1000) {
@@ -133,7 +149,7 @@ class Test2Activity : AppCompatActivity() {
         }.start()
     }
 
-    @SuppressLint("ServiceCast")
+    // Función para iniciar el test
     private fun startTest() {
         testStarted = true
         keyEvents.clear()
@@ -157,6 +173,7 @@ class Test2Activity : AppCompatActivity() {
         imm.showSoftInput(binding.etInput, InputMethodManager.SHOW_IMPLICIT)
     }
 
+    // Función para finalizar el test
     private fun endTest() {
         testStarted = false
         endTime = System.currentTimeMillis()
@@ -167,18 +184,20 @@ class Test2Activity : AppCompatActivity() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etInput.windowToken, 0)
 
-        saveTestData()
         showResults()
     }
 
+    // Función para guardar los datos del test
     private fun saveTestData() {
         try {
             val totalTime = endTime - startTime
             val totalPresses = keyEvents.count { it.action == "INSERT" }
-            val correctPresses = keyEvents.count {it.action == "INSERT" && it.correct}
-            val incorrectPresses = totalPresses - correctPresses
-            val accuracy = if (totalPresses > 0) (correctPresses.toDouble()/totalPresses * 100) else 0.0
-            val speed = if (totalTime > 0 ) totalPresses / (totalTime/1000.0) else 0.0
+            val incorrectPresses = keyEvents.count { it.action == "INSERT" && !it.correct }
+            val correctPresses =
+                keyEvents.count { it.action == "INSERT" && it.correct } - incorrectPresses
+            val accuracy =
+                if (totalPresses > 0) (correctPresses.toDouble() / (totalPresses - incorrectPresses) * 100) else 0.0
+            val speed = if (totalTime > 0) totalPresses / (totalTime / 1000.0) else 0.0
 
             val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
             val username = sharedPref.getString("username", "unknown") ?: "unknown"
@@ -216,33 +235,29 @@ class Test2Activity : AppCompatActivity() {
                 put("key_events", eventsArray)
             }
 
-            // Guardar archivo
+            // Guardar archivo JSON
             val fileName = "test2_${getUsername()}_${System.currentTimeMillis()}.json"
             File(filesDir, fileName).writeText(testData.toString())
 
-            sharedPref.edit().putBoolean("test2_completed", true).apply()
-            Log.d("Test2", "Datos guardados correctamente")
+            //Marcar test como completado para este usuario
+            with(sharedPref.edit()) {
+                putBoolean("${getUsername()}_test2_completed", true)
+                apply()
+            }
+            setResult(RESULT_OK)
         } catch (e: Exception) {
             Log.e("Test2", "Error al guardar datos", e)
+            setResult(RESULT_CANCELED)
         }
-
-        //Marcar test como completado para este usuario
-        val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putBoolean("${getUsername()}_test2_completed", true)
-            apply()
-        }
-
-        setResult(RESULT_OK)
     }
 
+    // Función para obtener el nombre de usuario
     private fun getUsername(): String {
         return getSharedPreferences("app_prefs", MODE_PRIVATE)
             .getString("username", "") ?: ""
-
     }
 
-
+    // Función para mostrar los resultados y opciones al usuario
     private fun showResults() {
 
         AlertDialog.Builder(this)
@@ -257,17 +272,18 @@ class Test2Activity : AppCompatActivity() {
             .show()
     }
 
+    // Función para reiniciar el test
     private fun resetTest() {
         // Limpiar el campo de texto y habilitarlo
         binding.etInput.text.clear()
         binding.etInput.isEnabled = true
-        // Restablecer la visibilidad y el estado de los elementos
         binding.etInput.visibility = View.GONE
         // Detener y ocultar cronómetro
         binding.chronometer.visibility = View.GONE
         binding.chronometer.stop()
-        //Reactivar el botón de inicio
+        //Reactivar el botón de inicio y hacerlo visible
         binding.btnStart.isEnabled = true
+        binding.btnStart.visibility = View.VISIBLE
         //Restablecer el contador
         binding.tvCountdown.text = ""
         // Reiniciar estado del test

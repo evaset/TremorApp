@@ -87,7 +87,8 @@ class ViewDataActivity : AppCompatActivity() {
             val kPresses = json.getInt("total_k_presses")
             val otherPresses = totalPresses - kPresses
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
-            val speedAll = totalPresses / totalTimeSec
+            val speedAll = json.getDouble("speed_keystrokes_per_sec")
+            val accuracy = json.getDouble("accuracy")
 
             """        
                 === Test 1 ===
@@ -95,12 +96,12 @@ class ViewDataActivity : AppCompatActivity() {
                 Fecha: ${json.getString("start_time")}
                               
                 Métricas:
-                - Tiempo total: ${json.getLong("total_time_ms")}ms
+                - Tiempo total: ${totalTimeSec}ms
                 - Pulsaciones totales: $totalPresses
                 - Pulsaciones 'k': $kPresses
                 - Otras teclas: $otherPresses
                 - Velocidad total: ${"%.2f".format(speedAll)} teclas/seg            
-                - Precisión: ${"%.1f".format(kPresses.toDouble() / totalPresses * 100)}%
+                - Precisión: ${"%.2f".format(accuracy)}%
                 
                 Texto final: ${json.optString("final_text", "N/A")}
             """.trimIndent()
@@ -124,9 +125,10 @@ class ViewDataActivity : AppCompatActivity() {
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
             val totalPresses = json.getInt("total_presses")
             val correctPresses = json.getInt("correct_presses")
+            val incorrectPresses = json.getInt("incorrect_presses")
             val accuracy = json.getDouble("accuracy")
             val targetText = json.getString("target_text")
-            val speedAll = totalPresses / totalTimeSec
+            val speedAll = json.getDouble("speed_keystrokes_per_sec")
 
             """        
                 === Test 2 ===
@@ -137,12 +139,12 @@ class ViewDataActivity : AppCompatActivity() {
                 "$targetText"
                               
                 Métricas:
-                - Tiempo total: ${json.getLong("total_time_ms")}ms
+                - Tiempo total: ${totalTimeSec}ms
                 - Pulsaciones totales: $totalPresses
                 - Pulsaciones correctas: $correctPresses
-                - Errores: ${totalPresses - correctPresses}
+                - Errores: $incorrectPresses
                 - Velocidad total: ${"%.2f".format(speedAll)} teclas/seg            
-                - Precisión: ${"%.1f".format(accuracy)}%
+                - Precisión: ${"%.2f".format(accuracy)}%
                                
                 Texto final: ${json.optString("final_text", "N/A")}
             """.trimIndent()
@@ -166,8 +168,9 @@ class ViewDataActivity : AppCompatActivity() {
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
             val totalPresses = json.getInt("total_presses")
             val correctPresses = json.getInt("correct_presses")
+            val incorrectPresses = json.getInt("incorrect_presses")
             val accuracy = json.getDouble("accuracy")
-            val speedAll = totalPresses / totalTimeSec
+            val speedAll = json.getDouble("speed_keystrokes_per_sec")
             val sequences = json.getString("sequence")
 
                 """        
@@ -179,12 +182,12 @@ class ViewDataActivity : AppCompatActivity() {
                 "$sequences"
                               
                 Métricas:
-                - Tiempo total: ${json.getLong("total_time_ms")}ms
+                - Tiempo total: ${totalTimeSec}ms
                 - Pulsaciones totales: $totalPresses
                 - Pulsaciones correctas: $correctPresses
-                - Errores: ${totalPresses - correctPresses}
+                - Errores: $incorrectPresses
                 - Velocidad total: ${"%.2f".format(speedAll)} teclas/seg            
-                - Precisión: ${"%.1f".format(accuracy)}%
+                - Precisión: ${"%.2f".format(accuracy)}%
             """.trimIndent()
 
         } catch (e: Exception) {
@@ -206,9 +209,10 @@ class ViewDataActivity : AppCompatActivity() {
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
             val totalPresses = json.getInt("total_presses")
             val correctPresses = json.getInt("correct_presses")
+            val incorrectPresses = json.getInt("incorrect_presses")
             val accuracy = json.getDouble("accuracy")
             val targetText = json.getString("target_text")
-            val speedAll = totalPresses / totalTimeSec
+            val speedAll = json.getDouble("speed_keystrokes_per_sec")
 
             val actualChanges = json.optInt("actual_changes", -1)
             val userReported = json.optInt("user_reported", -1)
@@ -223,12 +227,12 @@ class ViewDataActivity : AppCompatActivity() {
                 "$targetText"
                               
                 Métricas de escritura:
-                - Tiempo total: ${json.getLong("total_time_ms")}ms
+                - Tiempo total: ${totalTimeSec}ms
                 - Pulsaciones totales: $totalPresses
                 - Pulsaciones correctas: $correctPresses
-                - Errores: ${totalPresses - correctPresses}
+                - Errores: $incorrectPresses
                 - Velocidad total: ${"%.2f".format(speedAll)} teclas/seg            
-                - Precisión: ${"%.1f".format(accuracy)}%
+                - Precisión: ${"%.2f".format(accuracy)}%
                 
                 Métricas de percepción: 
                 - Cambios reales de color: $actualChanges
@@ -257,8 +261,9 @@ class ViewDataActivity : AppCompatActivity() {
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
             val totalPresses = json.getInt("total_presses")
             val correctPresses = json.getInt("correct_rhythm_presses")
+            val incorrectPresses = json.getInt("incorrect_presses")
             val accuracy = json.getDouble("accuracy")
-            val speedAll = totalPresses / totalTimeSec
+            val speedAll = json.getDouble("speed_keystrokes_per_sec")
 
             val totalSounds = json.getInt("expected_presses_count")
             val avgDeviation = json.getDouble("average_deviation_ms")
@@ -269,12 +274,12 @@ class ViewDataActivity : AppCompatActivity() {
                 Fecha: ${json.getString("start_time")}
                                                            
                 Métricas de escritura:
-                - Tiempo total: ${json.getLong("total_time_ms")}ms
+                - Tiempo total: ${totalTimeSec}ms
                 - Pulsaciones totales: $totalPresses
                 - Pulsaciones correctas: $correctPresses
-                - Errores: ${totalPresses - correctPresses}
+                - Errores: $incorrectPresses
                 - Velocidad total: ${"%.2f".format(speedAll)} teclas/seg            
-                - Precisión: ${"%.1f".format(accuracy)}%
+                - Precisión: ${"%.2f".format(accuracy)}%
                 
                 Métricas de ritmo: 
                 - Sonidos emitidos: $totalSounds
@@ -302,9 +307,10 @@ class ViewDataActivity : AppCompatActivity() {
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
             val totalPresses = json.getInt("total_presses")
             val correctPresses = json.getInt("correct_presses")
+            val incorrectPresses = json.getInt("incorrect_presses")
             val accuracy = json.getDouble("accuracy")
             val targetText = json.getString("target_text")
-            val speedAll = totalPresses / totalTimeSec
+            val speedAll = json.getDouble("speed_keystrokes_per_sec")
 
             val completedPhrase  = json.optBoolean("completed_phrase", false)
             val completedInTime = json.optBoolean("completed_in_time", false)
@@ -322,12 +328,12 @@ class ViewDataActivity : AppCompatActivity() {
                 Frase completada: ${if (completedPhrase) "Si" else "NO"}
                               
                 Métricas:
-                - Tiempo total: ${json.getLong("total_time_ms")}ms
+                - Tiempo total: ${totalTimeSec}ms
                 - Pulsaciones totales: $totalPresses
                 - Pulsaciones correctas: $correctPresses
-                - Errores: ${totalPresses - correctPresses}
+                - Errores: $incorrectPresses
                 - Velocidad total: ${"%.2f".format(speedAll)} teclas/seg            
-                - Precisión: ${"%.1f".format(accuracy)}%
+                - Precisión: ${"%.2f".format(accuracy)}%
                                
                 Texto final: ${json.optString("final_text", "N/A")}
             """.trimIndent()
@@ -351,12 +357,10 @@ class ViewDataActivity : AppCompatActivity() {
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
             val totalPresses = json.getInt("total_presses")
             val correctPresses = json.getInt("correct_presses")
+            val incorrectPresses = json.getInt("incorrect_presses")
             val accuracy = json.getDouble("accuracy")
             val targetText = json.getString("target_text")
-            val speedAll = totalPresses / totalTimeSec
-
-            val completedPhrase  = json.optBoolean("completed_phrase", false)
-            val completedInTime = json.optBoolean("completed_in_time", false)
+            val speedAll = json.getDouble("speed_keystrokes_per_sec")
 
             """        
                 === Test 7 ===
@@ -367,12 +371,12 @@ class ViewDataActivity : AppCompatActivity() {
                 "$targetText"
                        
                 Métricas:
-                - Tiempo total: ${json.getLong("total_time_ms")}ms
+                - Tiempo total: ${totalTimeSec}ms
                 - Pulsaciones totales: $totalPresses
                 - Pulsaciones correctas: $correctPresses
-                - Errores: ${totalPresses - correctPresses}
+                - Errores: $incorrectPresses
                 - Velocidad total: ${"%.2f".format(speedAll)} teclas/seg            
-                - Precisión: ${"%.1f".format(accuracy)}%
+                - Precisión: ${"%.2f".format(accuracy)}%
                                
                 Texto final: ${json.optString("final_text", "N/A")}
             """.trimIndent()

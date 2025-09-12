@@ -23,25 +23,30 @@
     <string name="hint">Escribe aquí</string>
 
     <string name="test1_toolbar">TEST 1</string>
-
     <string name="test1_description">Pulsa la tecla k una vez por segundo, durante 15 segundos.</string>
 
+    <string name="test2_toolbar">TEST 2</string>
     <string name="test2_description">Copia la frase que aparece en pantalla exactamente como está escrita. Puedes borrar si cometes un error. El ejercicio terminará cuando hayas escrito la frase correctamente.</string>
     <string name="test2_sentence">Lupra zenok tir</string>
 
+    <string name="test3_toolbar">TEST 3</string>
     <string name="test3_description">Escribe las siguientes secuencias de teclas. Cuando termines una secuencia, aparecerá la siguiente en pantalla. Solo podrás continuar si la secuencia anterior está escrita exactamente igual. Puedes corregir si te equivocas.</string>
     <string name="test3_sentence">qwe asd zxc iop jkl bnm</string>
 
+    <string name="test4_toolbar">TEST 4</string>
     <string name="test4_description">Copia la frase que aparece en pantalla. Debes escribirla exactamente igual para poder terminar el ejercicio. Puedes corregir si te equivocas.
 Mientras escribes, verás un círculo que cambia de color.
 Al final del ejercicio, tendrás que indicar cuántas veces cambió de color.</string>
     <string name="test4_color_change">¿Cuántas veces cambió el color?</string>
 
+    <string name="test5_toolbar">TEST 5</string>
     <string name="test5_description">Pulsa la tecla "k" cada vez que escuches el sonido. Sigue el ritmo durante 15 segundos. Si te equivocas, no borres nada y continúa con el ejercicio.</string>
 
-    <string name="test6_description">Escribe la frase que aparece en pantalla lo más rápido que puedas.Puedes corregir si te equivocas. El test terminará cuando escribas la frase correctamente o pasen 15 segundos.</string>
+    <string name="test6_toolbar">TEST 6</string>
+    <string name="test6_description">Escribe la frase que aparece en pantalla lo más rápido que puedas. Puedes corregir si te equivocas. El test terminará cuando escribas la frase correctamente o pasen 15 segundos.</string>
     <string name="test6_sentence">Zubren kial trof menuc dilas</string>
 
+    <string name="test7_toolbar">TEST 7</string>
     <string name="test7_description">Escribe el texto que aparecerá en pantalla, en bloques de cinco palabras. Después de cada bloque, espera a que la app te indique que puedes continuar. No podrás continuar hasta que todas las palabras estén bien escritas (acuerdate de poner punto cuando sea necesario)</string>
     <string name="test7_nextblock">Siguiente Bloque</string>
     <string name="test7_complete">Texto completo:</string>

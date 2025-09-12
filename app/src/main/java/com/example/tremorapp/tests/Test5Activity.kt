@@ -1,6 +1,5 @@
 package com.example.tremorapp.tests
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -27,19 +26,24 @@ import com.example.tremorapp.R
 class Test5Activity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTest5Binding
+
+    // Variables para controlar el estado y tiempo del test
     private var testStarted = false
     private var startTime: Long = 0
     private var lastTextChangeTime: Long = 0
     private var lastText = ""
+
+    // Variables para controlar el sonido
     private var soundTimer: CountDownTimer? = null
     private var testTimer: CountDownTimer? = null
     private var mediaPlayer: MediaPlayer? = null
-    private var expectedPressTimes = mutableListOf<Long>()
-    private var actualPressTimes = mutableListOf<Long>()
+    private var expectedPressTimes = mutableListOf<Long>()  // Tiempos esperados de las pulsaciones
+    private var actualPressTimes = mutableListOf<Long>()    // Tiempos reales de las pulsaciones
 
-    private val INITIAL_DELAY_MS = 500L
-    private val TOTAL_DURATION_MS = 15000L
-    private val BEEP_INTERVAL_MS = 1000L
+    // Duración del sonido
+    private val INITIAL_DELAY_MS = 500L     // Retardo inicial antes del primer sonido
+    private val TOTAL_DURATION_MS = 15000L  // Duración total del test (15 segundos)
+    private val BEEP_INTERVAL_MS = 1000L    //Intervalo entre sonidos (1 segundo)
 
 
     // Modelo para guardar datos
@@ -48,28 +52,41 @@ class Test5Activity : AppCompatActivity() {
         val action: String,       // "INSERT" o "DELETE"
         val char: Char?,          // Carácter afectado
         val currentText: String,   // Texto completo en ese momento
-        val correct: Boolean,      // Si el carácter es correcto
+        val correct: Boolean,      // Si el carácter es correcto y el momento adecuado
         val deviation: Long,      // Diferencia con el sonido esperado (ms)
         val expectedTime: Long    // Momento teórico en que debió pulsarse
     )
 
+    // Lista para almacenar todos los eventos del teclado
     private val keyEvents = mutableListOf<KeyPressData>()
 
+    // Metodo para que se ejecute cuanda la actividad es creada
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTest5Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configurar el listener del botón de retroceso
+        binding.btnBackMenu.setOnClickListener {
+            if (testStarted) {
+                Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                finish()
+            }
+        }
         setupTest()
         setupMediaPlayer()
     }
 
+    // Función para configurar el reproductor de sonido
     private fun setupMediaPlayer() {
         mediaPlayer = MediaPlayer.create(this, R.raw.beep_sound).apply {
             setVolume(0.5f, 0.5f)
         }
     }
 
+    // Manejar el botón de rectroceso físico del dispositivo
     override fun onBackPressed() {
         if (testStarted) {
             Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT).show()
@@ -78,15 +95,16 @@ class Test5Activity : AppCompatActivity() {
         }
     }
 
+    // Función para configurar el test
     private fun setupTest() {
         binding.btnStart.setOnClickListener {
             startCountdown()
         }
 
-        // Configurar TextWatcher
+        // Configurar TextWatcher para detectar cambios es el texto
         binding.etInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                lastText = s?.toString() ?: ""
+                lastText = s?.toString() ?: ""  // Guardar el texto actual antes del cambio
             }
 
 
@@ -146,6 +164,7 @@ class Test5Activity : AppCompatActivity() {
         })
     }
 
+    // Función para verificar si una pulsación está cerca del tiempo esperado
     private fun isCloseToExpectedTime(currentTime: Long): Boolean {
         // Consideramos correcto si está dentro de ±300ms del tiempo esperado
         return expectedPressTimes.any {expectedTime ->
@@ -154,15 +173,18 @@ class Test5Activity : AppCompatActivity() {
         }
     }
 
+    // Función para calcular la desviación del tiempo esperado
     private fun calculateDeviation(currentTime: Long): Long {
         val closestExpected = expectedPressTimes.minByOrNull { Math.abs(it - currentTime) }
         return closestExpected?.let { Math.abs(it - currentTime) } ?: Long.MAX_VALUE
     }
 
+    // Función para obtener el tiempo esperado más cercano
     private fun getClosestExpectedTime(currentTime: Long): Long {
         return expectedPressTimes.minByOrNull { Math.abs(it - currentTime) } ?: 0
     }
 
+    // Función para inicciar la cuenta regresiva de 3 segundos
     private fun startCountdown() {
         binding.btnStart.isEnabled = false
         binding.tvCountdown.visibility = View.VISIBLE
@@ -178,7 +200,7 @@ class Test5Activity : AppCompatActivity() {
         }.start()
     }
 
-    @SuppressLint("ServiceCast")
+    // Función para iniciar el test
     private fun startTest() {
         testStarted = true
         keyEvents.clear()
@@ -215,15 +237,15 @@ class Test5Activity : AppCompatActivity() {
                     // Solo activar despues del retardo inicial
                     if (elapsedTime >= INITIAL_DELAY_MS) {
                         val testTime = elapsedTime - INITIAL_DELAY_MS
-                        expectedPressTimes.add(testTime)
-                        playSound()
+                        expectedPressTimes.add(testTime)    // Registrar tiempo esperado
+                        playSound()     // Reproducir sonido
                     }
                     binding.tvCountdown.text = "${millisUntilFinished / 1000 + 1}s"
                 }
 
                 override fun onFinish() {
                     playSound() //Último sonido al final
-                    expectedPressTimes.add(TOTAL_DURATION_MS)
+                    expectedPressTimes.add(TOTAL_DURATION_MS)   // Último tiempo esperado
                 }
             }.start()
 
@@ -234,11 +256,12 @@ class Test5Activity : AppCompatActivity() {
                 binding.chronometer.stop()
                 Handler(Looper.getMainLooper()).postDelayed({
                     endTest()
-                }, 200)
+                }, 200)     // Pequeño retraso antes de terminar
             }
         }.start()
     }
 
+    // Función para reproducir el sonido
     private fun playSound() {
         try {
             mediaPlayer?.seekTo(0) //Rebobinar al inicio si ya está reproduciendo
@@ -248,7 +271,7 @@ class Test5Activity : AppCompatActivity() {
         }
     }
 
-
+    // Función para finalizar el test
     private fun endTest() {
         testStarted = false
         binding.etInput.clearFocus()
@@ -260,10 +283,10 @@ class Test5Activity : AppCompatActivity() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etInput.windowToken, 0)
 
-        saveTestData()
         showResults()
     }
 
+    // Función para guardar los datos del test
     private fun saveTestData() {
         try {
             val totalTime = TOTAL_DURATION_MS
@@ -328,31 +351,28 @@ class Test5Activity : AppCompatActivity() {
                 // Agregar tiempos esperados
                 val expectedArray = JSONArray()
                 expectedPressTimes.forEach {
-                    expectedArray.put(it)
+                    expectedArray.put(it)}
                     put("expected_times", expectedArray)
-                }
+
             }
 
-            // Guardar archivo
+            // Guardar archivo JSON
             val fileName = "test5_${getUsername()}_${System.currentTimeMillis()}.json"
             File(filesDir, fileName).writeText(testData.toString())
 
-            sharedPref.edit().putBoolean("test5_completed", true).apply()
-            Log.d("Test5", "Datos guardados correctamente")
+        //Marcar test como completado para este usuario
+            with(sharedPref.edit()) {
+                putBoolean("${getUsername()}_test5_completed", true)
+                apply()
+            }
+            setResult(RESULT_OK)
         } catch (e: Exception) {
             Log.e("Test5", "Error al guardar datos", e)
+            setResult(RESULT_CANCELED)
         }
-
-        //Marcar test como completado para este usuario
-        val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putBoolean("${getUsername()}_test5_completed", true)
-            apply()
-        }
-
-        setResult(RESULT_OK)
     }
 
+    // Función para calcular la desviación del rito (desviación estandar de los intervalos)
     private fun calculateRhythmDeviation(): Double {
         if (actualPressTimes.size < 2) return 0.0
 
@@ -366,12 +386,14 @@ class Test5Activity : AppCompatActivity() {
         return Math.sqrt(variance)
     }
 
+    // Función para obtener el nombro de los usuarios
     private fun getUsername(): String {
         return getSharedPreferences("app_prefs", MODE_PRIVATE)
             .getString("username", "") ?: ""
 
     }
 
+    // Función para mostrar los resultados y ipciones al usuario
     private fun showResults() {
         AlertDialog.Builder(this)
             .setTitle("Test completado")
@@ -385,6 +407,7 @@ class Test5Activity : AppCompatActivity() {
             .show()
     }
 
+    // Función para reiniciar el test
     private fun resetTest() {
         // Limpiar el campo de texto y habilitarlo
         binding.etInput.text.clear()
@@ -405,10 +428,11 @@ class Test5Activity : AppCompatActivity() {
         actualPressTimes.clear()
     }
 
+    // Limpiar recursos cuando la actividad es destruida
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release()
-        soundTimer?.cancel()
+        mediaPlayer?.release()  // Librar el reproductr de medios
+        soundTimer?.cancel()    // Cancelar temporizador
         testTimer?.cancel()
     }
 }

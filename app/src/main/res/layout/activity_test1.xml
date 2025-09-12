@@ -14,55 +14,54 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/secondary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="4dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <!-- Botón de volver al menú -->
-        <ImageButton
-            android:id="@+id/btnBackMenu"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back"
-            android:src="@drawable/ic_home"
-            app:tint="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="4dp"/>
+            <!-- Botón de volver al menú -->
+            <ImageButton
+                android:id="@+id/btnBackMenu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back"
+                android:src="@drawable/ic_home"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
-        <!--Título-->
-        <TextView
-            android:id="@+id/tvTitleToolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/test1_toolbar"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_gravity="center"/>
+            <!--Título-->
+            <TextView
+                android:id="@+id/tvTitleToolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/test1_toolbar"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </Toolbar>
 
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,8 +78,8 @@
                 android:lineSpacingExtra="4dp"
                 android:text="@string/test1"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <!-- Instrucciones -->
             <TextView
@@ -93,55 +92,55 @@
                 android:textColor="@color/instructions"
                 android:textSize="18sp" />
 
-    <!-- Botón de inicio -->
-    <Button
-        android:id="@+id/btnStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/button_rounded"
-        android:backgroundTint="@color/data"
-        android:padding="16dp"
-        android:text="@string/start"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+            <!-- Botón de inicio -->
+            <Button
+                android:id="@+id/btnStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/button_rounded"
+                android:backgroundTint="@color/data"
+                android:padding="16dp"
+                android:text="@string/start"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <!-- Contador -->
-    <TextView
-        android:id="@+id/tvCountdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:textColor="@color/timer"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:visibility="gone"/>
+            <!-- Contador -->
+            <TextView
+                android:id="@+id/tvCountdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:textColor="@color/timer"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-    <!-- Campo de entrada -->
-    <EditText
-        android:id="@+id/etInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/edittext_background"
-        android:cursorVisible="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:hint="@string/hint"
-        android:inputType="text"
-        android:padding="12dp"
-        android:textSize="16sp"
-        android:visibility="gone"/>
+            <!-- Campo de entrada -->
+            <EditText
+                android:id="@+id/etInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/edittext_background"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="@string/hint"
+                android:inputType="text"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:visibility="gone" />
 
-    <!-- Cronómetro -->
-    <Chronometer
-        android:id="@+id/chronometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"/>
+            <!-- Cronómetro -->
+            <Chronometer
+                android:id="@+id/chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>
