@@ -89,6 +89,7 @@ class Test4Activity : AppCompatActivity() {
     // Función para configurar el test
     private fun setupTest() {
         // Mostrar la frase a copiar
+        binding.tvInstruction.visibility = View.VISIBLE
         binding.tvSentence.text = targetText    // Mostrar la frase a copiar
         binding.btnStart.setOnClickListener {
             startCountdown()
@@ -193,6 +194,7 @@ class Test4Activity : AppCompatActivity() {
 
     // Función para inicial la animación del círculo
     private fun startColorAnimation() {
+        binding.tvInstruction.visibility = View.GONE
         binding.circleView.visibility = View.VISIBLE
         colorChangeCount = 0
 
@@ -279,13 +281,14 @@ class Test4Activity : AppCompatActivity() {
         try {
             val totalTime = endTime - startTime
             val totalPresses = keyEvents.count { it.action == "INSERT" }
-            val correctPresses = keyEvents.count { it.action == "INSERT" && it.correct }
-            val incorrectPresses = totalPresses - correctPresses
+            val incorrectPresses =  keyEvents.count { it.action == "INSERT" && !it.correct }
+            val correctPresses =  keyEvents.count { it.action == "INSERT" && it.correct } - incorrectPresses
             val accuracy =
                 if (totalPresses > 0) (correctPresses.toDouble() / totalPresses * 100) else 0.0
             val speed = if (totalTime > 0) totalPresses / (totalTime / 1000.0) else 0.0
 
-            val difference = abs(colorChangeCount - userCount)
+            val colorChange = abs(colorChangeCount - 1)     // Nº de colores totales - 1 = veces que cambia de color
+            val difference = abs(colorChange - userCount)
 
             val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
             val username = sharedPref.getString("username", "unknown") ?: "unknown"
@@ -309,7 +312,7 @@ class Test4Activity : AppCompatActivity() {
                 put("accuracy", accuracy)
                 put("speed_keystrokes_per_sec", speed)
 
-                put("actual_changes", colorChangeCount)
+                put("actual_changes", colorChange)
                 put("user_reported", userCount)
                 put("difference", difference)
 
@@ -369,5 +372,7 @@ class Test4Activity : AppCompatActivity() {
         // Reiniciar estado del test
         testStarted = false
         keyEvents.clear()
+        // Hacer visible las instrucciones
+        binding.tvInstruction.visibility = View.VISIBLE
     }
 }

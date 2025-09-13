@@ -313,8 +313,8 @@
             android:text="@string/data"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:backgroundTint="@color/data"
             android:layout_marginTop="32dp"
+            android:background="@drawable/bg_button"
             android:padding="16dp" />
 
     </LinearLayout>

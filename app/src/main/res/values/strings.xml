@@ -47,7 +47,7 @@ Al final del ejercicio, tendrás que indicar cuántas veces cambió de color.</s
     <string name="test6_sentence">Zubren kial trof menuc dilas</string>
 
     <string name="test7_toolbar">TEST 7</string>
-    <string name="test7_description">Escribe el texto que aparecerá en pantalla, en bloques de cinco palabras. Después de cada bloque, espera a que la app te indique que puedes continuar. No podrás continuar hasta que todas las palabras estén bien escritas (acuerdate de poner punto cuando sea necesario)</string>
+    <string name="test7_description">Escribe el texto que aparecerá en pantalla, en bloques de palabras. Después de cada bloque, espera a que la app te indique que puedes continuar. No podrás continuar hasta que todas las palabras estén bien escritas (acuerdate de poner punto cuando sea necesario)</string>
     <string name="test7_nextblock">Siguiente Bloque</string>
     <string name="test7_complete">Texto completo:</string>
     <string name="test7_sentence_1">El sol brilla sobre el</string>
@@ -58,5 +58,6 @@ Al final del ejercicio, tendrás que indicar cuántas veces cambió de color.</s
 
     //ViewData
     <string name="export_data">Exportar datos</string>
+    <string name="view_data">Ver datos</string>
 
 </resources>

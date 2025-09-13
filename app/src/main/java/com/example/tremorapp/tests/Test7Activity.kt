@@ -1,6 +1,5 @@
 package com.example.tremorapp.tests
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import android.os.CountDownTimer
@@ -23,15 +22,18 @@ import java.util.Date
 import java.util.Locale
 
 class Test7Activity : AppCompatActivity() {
+
     private lateinit var binding: ActivityTest7Binding
+
+    // Variables para controlar el estado y tiempo del test
     private var testStarted = false
     private var startTime: Long = 0
     private var endTime: Long = 0
     private var lastText: String = ""
-    private var currentBlockIndex = 0
-    private var testTimer: CountDownTimer? = null
+    private var currentBlockIndex = 0   //Indice del bloque de texto actual
+    private var testTimer: CountDownTimer? = null   // Temporizador principal del test
 
-    // Bloques de texto para el test
+    // Bloques de texto para el test (dividido en 5 partes)
     private val textBlocks = listOf(
         "El sol brilla sobre el",
         "lago. Los niños juegan",
@@ -40,7 +42,7 @@ class Test7Activity : AppCompatActivity() {
         "Todos ríen bajo el cielo."
     )
 
-    // Modelo para guardar datos
+    // Modelo de datos para registrar eventos de teclado
     data class KeyPressData(
         val timestamp: Long,      // Momento del evento (ms desde inicio)
         val action: String,       // "INSERT" o "DELETE"
@@ -50,17 +52,29 @@ class Test7Activity : AppCompatActivity() {
         val blockIndex: Int       // Índice del bloque actual
     )
 
+    // Lista para almacenar todos los eventos del teclado
     private val keyEvents = mutableListOf<KeyPressData>()
     private val allUserTexts = mutableListOf<String>()
 
+    // Metodo que se ejecuta cuando la actividad es creada
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTest7Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configurar el listener del botón de retroceso
+        binding.btnBackMenu.setOnClickListener {
+            if (testStarted) {
+                Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                finish()
+            }
+        }
         setupTest()
     }
 
+    // Manejar el botón de retroceso físico del dispositivo
     override fun onBackPressed() {
         if (testStarted) {
             Toast.makeText(this, "Por favor complete el test primero", Toast.LENGTH_SHORT).show()
@@ -69,6 +83,7 @@ class Test7Activity : AppCompatActivity() {
         }
     }
 
+    // Función para configurar el test
     private fun setupTest() {
         // Mostrar el primer bloque de texto
         showCurrentBlock()
@@ -77,11 +92,7 @@ class Test7Activity : AppCompatActivity() {
             startCountdown()
         }
 
-        binding.btnNextBlock.setOnClickListener {
-            nextBlock()
-        }
-
-        // Configurar TextWatcher
+        // Configurar TextWatcher para detectar cambios en el texto
         binding.etInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 lastText = s?.toString() ?: ""
@@ -111,7 +122,10 @@ class Test7Activity : AppCompatActivity() {
                             blockIndex = currentBlockIndex
                         )
                     )
-                    Log.d("KeyPress", "INSERT '$newChar' at $currentTime ms (Block $currentBlockIndex)")
+                    Log.d(
+                        "KeyPress",
+                        "INSERT '$newChar' at $currentTime ms (Block $currentBlockIndex)"
+                    )
                 } else if (newText.length < lastText.length) {
                     // Carácter borrado
                     keyEvents.add(
@@ -127,12 +141,10 @@ class Test7Activity : AppCompatActivity() {
                     Log.d("KeyPress", "DELETE at $currentTime ms (Block $currentBlockIndex)")
                 }
                 lastText = newText
-                // Verificar si completó el bloque actual
+                // Verificar si completó el bloque actual correctamente
                 if (newText.equals(currentBlock, ignoreCase = true)) {
-                    binding.btnNextBlock.isEnabled = true
-                    binding.btnNextBlock.visibility = View.VISIBLE
-                } else {
-                    binding.btnNextBlock.isEnabled = false
+                    // Avanzar automáticamente al siguiente bloque después de un breve retraso
+                    binding.etInput.postDelayed({nextBlock()},500)
                 }
             }
 
@@ -140,12 +152,12 @@ class Test7Activity : AppCompatActivity() {
         })
     }
 
+    // Muestra el bloque actual
     private fun showCurrentBlock() {
         if (currentBlockIndex < textBlocks.size) {
             binding.tvSentence.text = textBlocks[currentBlockIndex]
             binding.etInput.setText("")
             binding.etInput.isEnabled = true
-            binding.btnNextBlock.isEnabled = false
 
             // Enfocar el EditText y mostrar teclado
             binding.etInput.requestFocus()
@@ -154,12 +166,13 @@ class Test7Activity : AppCompatActivity() {
         }
     }
 
+    // Mostrar el siguiente bloque
     private fun nextBlock() {
         // Guardar el texto actual del bloque antes de avanzar
         val currentText = binding.etInput.text.toString()
 
         // Solo guardar si hay texto (evitar bloques vacíos)
-        if (currentText.isNotBlank()){
+        if (currentText.isNotBlank()) {
             allUserTexts.add(currentText)
         }
 
@@ -171,6 +184,7 @@ class Test7Activity : AppCompatActivity() {
             endTest()
         }
     }
+
     private fun startCountdown() {
         binding.btnStart.isEnabled = false
         binding.tvCountdown.visibility = View.VISIBLE
@@ -186,7 +200,7 @@ class Test7Activity : AppCompatActivity() {
         }.start()
     }
 
-    @SuppressLint("ServiceCast")
+    // Función para iniciar el test
     private fun startTest() {
         testStarted = true
         keyEvents.clear()
@@ -206,7 +220,6 @@ class Test7Activity : AppCompatActivity() {
 
         binding.tvCountdown.visibility = View.GONE
         binding.etInput.visibility = View.VISIBLE
-        binding.btnNextBlock.visibility = View.VISIBLE
         binding.tvSentence.visibility = View.VISIBLE
         binding.btnStart.visibility = View.GONE
 
@@ -230,17 +243,17 @@ class Test7Activity : AppCompatActivity() {
         }.start()
     }
 
+    // Función para finalizar el test
     private fun endTest() {
         testStarted = false
         endTime = System.currentTimeMillis()
         testTimer?.cancel()
         binding.chronometer.stop()
         binding.etInput.isEnabled = false
-        binding.btnNextBlock.isEnabled = false
 
         //Guardar el texto del bloque actual solo si no se había guardado
         val currentText = binding.etInput.text.toString()
-        if (currentText.isNotBlank() && (allUserTexts.size <= currentBlockIndex || allUserTexts.lastOrNull() != currentText)){
+        if (currentText.isNotBlank() && (allUserTexts.size <= currentBlockIndex || allUserTexts.lastOrNull() != currentText)) {
             allUserTexts.add(currentText)
         }
 
@@ -252,13 +265,16 @@ class Test7Activity : AppCompatActivity() {
         showResults()
     }
 
+    // Función para guardar los datos del test
     private fun saveTestData() {
         try {
             val totalTime = endTime - startTime
             val totalPresses = keyEvents.count { it.action == "INSERT" }
-            val correctPresses = keyEvents.count { it.action == "INSERT" && it.correct }
-            val incorrectPresses = totalPresses - correctPresses
-            val accuracy = if (totalPresses > 0) (correctPresses.toDouble() / totalPresses * 100) else 0.0
+            val incorrectPresses = keyEvents.count { it.action == "INSERT" && !it.correct }
+            val correctPresses =
+                keyEvents.count { it.action == "INSERT" && it.correct } - incorrectPresses
+            val accuracy =
+                if (totalPresses > 0) (correctPresses.toDouble() / totalPresses * 100) else 0.0
             val speed = if (totalTime > 0) totalPresses / (totalTime / 1000.0) else 0.0
             val completedBlocks = (currentBlockIndex + 1).coerceAtMost(textBlocks.size)
             val allBlocksCompleted = currentBlockIndex == textBlocks.size - 1 &&
@@ -272,7 +288,12 @@ class Test7Activity : AppCompatActivity() {
             val testData = JSONObject().apply {
                 put("test_name", "test7")
                 put("username", username)
-                put("start_time", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(startTime)))
+                put(
+                    "start_time",
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
+                        Date(startTime)
+                    )
+                )
                 put("total_time_ms", totalTime)
                 put("target_text", textBlocks.joinToString(" "))
                 put("completed_blocks", completedBlocks)
@@ -307,30 +328,29 @@ class Test7Activity : AppCompatActivity() {
                 put("key_events", eventsArray)
             }
 
-            // Guardar archivo
+            // Guardar archivo JSON
             val fileName = "test7_${getUsername()}_${System.currentTimeMillis()}.json"
             File(filesDir, fileName).writeText(testData.toString())
 
-            sharedPref.edit().putBoolean("test7_completed", true).apply()
-            Log.d("Test7", "Datos guardados correctamente")
+            //Marcar test como completado para este usuario
+            with(sharedPref.edit()) {
+                putBoolean("${getUsername()}_test7_completed", true)
+                apply()
+            }
+            setResult(RESULT_OK)
         } catch (e: Exception) {
             Log.e("Test7", "Error al guardar datos", e)
+            setResult(RESULT_CANCELED)
         }
-
-        // Marcar test como completado para este usuario
-        val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putBoolean("${getUsername()}_test7_completed", true)
-            apply()
-        }
-        setResult(RESULT_OK)
     }
 
+    // Función para obtener el nombre de usuario
     private fun getUsername(): String {
         return getSharedPreferences("app_prefs", MODE_PRIVATE)
             .getString("username", "") ?: ""
     }
 
+    // Función para mostrar los resultados y opciones al usuario
     private fun showResults() {
         val completedBlocks = (currentBlockIndex + 1).coerceAtMost(textBlocks.size)
         val message = if (completedBlocks == textBlocks.size) {
@@ -351,18 +371,18 @@ class Test7Activity : AppCompatActivity() {
             .show()
     }
 
+    // Función para reiniciar el test
     private fun resetTest() {
         // Limpiar el campo de texto y habilitarlo
         binding.etInput.text.clear()
         binding.etInput.isEnabled = true
         // Restablecer la visibilidad y el estado de los elementos
         binding.etInput.visibility = View.GONE
-        binding.btnNextBlock.visibility = View.GONE
         binding.tvSentence.visibility = View.GONE
         // Detener y ocultar cronómetro
         binding.chronometer.visibility = View.GONE
         binding.chronometer.stop()
-        // Reactivar el botón de inicio
+        // Reactivar el botón de inicio y hacerlo visible
         binding.btnStart.visibility = View.VISIBLE
         binding.btnStart.isEnabled = true
         // Restablecer el contador
@@ -374,12 +394,14 @@ class Test7Activity : AppCompatActivity() {
         keyEvents.clear()
         allUserTexts.clear()
         // Restablecer el texto del primer bloque
-        binding.tvSentence.text = textBlocks.firstOrNull()?:""
+        binding.tvSentence.text = textBlocks.firstOrNull() ?: ""
     }
+
+    // Canccelar temporizador al destruir la actividad
     override fun onDestroy() {
         super.onDestroy()
         testTimer?.cancel()
     }
 
 
-    }
+}

@@ -24,6 +24,7 @@ class ViewDataActivity : AppCompatActivity() {
         sharedPref.getString("username", "") ?: ""
     }
 
+    // Metodo que se ejecuta cuando la actividad es creada
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityViewDataBinding.inflate(layoutInflater)
@@ -32,9 +33,13 @@ class ViewDataActivity : AppCompatActivity() {
         sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
         loadUserData()
 
-        binding.btnExportData.setOnClickListener { exportAllData() }
-    }
+        binding.btnExportData.setOnClickListener { exportAllData() }    // exportar datos al hacer clic
 
+        // Configurar el listener del botón de retroceso
+        binding.btnBackMenu.setOnClickListener { finish() }
+        }
+
+    // Cargar información del usuario actual
     private fun loadUserData() {
         if (currentUser.isEmpty()) {
             binding.tvUserInfo.text = "No hay usuario identificado"
@@ -45,6 +50,7 @@ class ViewDataActivity : AppCompatActivity() {
         loadTestData()
     }
 
+    // Cargar y mostrar datos de todos los tests
     private fun loadTestData() {
         val stringBuilder = StringBuilder().apply {
             append("\n=== Resultado de Tests ===")
@@ -71,6 +77,12 @@ class ViewDataActivity : AppCompatActivity() {
         }
         binding.tvTestData.text = stringBuilder.toString()
     }
+
+    // Cargar datos específicos de los tests:
+    // - Buscar archivos del test específico
+    // - Leer el más reciente
+    // - Extraer y formatear las métricas relevantes
+    // - Devuelven string con los resultados
 
     private fun loadTest1Data(): String {
         val test1Files = filesDir.listFiles { file ->
@@ -261,7 +273,7 @@ class ViewDataActivity : AppCompatActivity() {
             val totalTimeSec = json.getLong("total_time_ms") / 1000.0
             val totalPresses = json.getInt("total_presses")
             val correctPresses = json.getInt("correct_rhythm_presses")
-            val incorrectPresses = json.getInt("incorrect_presses")
+            val incorrectPresses = json.getInt("total_other_presses")
             val accuracy = json.getDouble("accuracy")
             val speedAll = json.getDouble("speed_keystrokes_per_sec")
 
@@ -386,6 +398,7 @@ class ViewDataActivity : AppCompatActivity() {
         }
     }
 
+    // Exportar todos los datos a un archivo JSON y compartirlo
     private fun exportAllData() {
         try {
             val allData = JSONObject().apply {
@@ -460,6 +473,7 @@ class ViewDataActivity : AppCompatActivity() {
                     it.write(allData.toString().toByteArray())
                 }
 
+                // Compartir el archivo usando Intent
                 FileProvider.getUriForFile(
                     this@ViewDataActivity,
                     "${packageName}.fileprovider",
@@ -479,6 +493,7 @@ class ViewDataActivity : AppCompatActivity() {
         }
     }
 
+    // Obtener archivos de test específicos para el usuario actual
     private fun getTestFilesForUser(testNumber: Int): Array<File>? {
         return filesDir.listFiles { file ->
             file.name.startsWith("test${testNumber}_") && file.name.contains("_${currentUser}_")

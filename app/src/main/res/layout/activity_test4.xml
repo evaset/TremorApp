@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    android:padding="16dp"
+    android:padding="0dp"
     tools:context=".tests.Test4Activity">
 
     <!-- Barra superioir -->
@@ -90,6 +90,7 @@
                 android:lineSpacingExtra="4dp"
                 android:text="@string/test4_description"
                 android:textColor="@color/instructions"
+                android:visibility="gone"
                 android:textSize="18sp" />
 
             <TextView
@@ -101,7 +102,7 @@
                 android:text="@string/test2_sentence"
                 android:textColor="@color/instructions"
                 android:textSize="18sp"
-                android:textStyle="italic" />
+                android:textStyle="bold" />
 
             <!-- Botón de inicio -->
             <Button
@@ -153,23 +154,21 @@
                 android:layout_marginTop="16dp"
                 android:visibility="gone" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center">
+            <!-- Círculo que cambia de color -->
+            <ImageView
+                android:id="@+id/circleView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/circle_shape"
+                android:visibility="gone"
+                android:contentDescription="Círculo que cambia de color"
+                android:layout_gravity="top|center_horizontal"
+                android:translationZ="10dp"
+                />
 
-                <!-- Círculo que cambia de color -->
-                <ImageView
-                    android:id="@+id/circleView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/circle_shape"
-                    android:visibility="gone"
-                    android:contentDescription="Círculo que cambia de color"/>
-            </FrameLayout>
 
         </LinearLayout>
     </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -76,8 +76,10 @@ class Test3Activity : AppCompatActivity() {
 
     // Función para configurar el test
     private fun setupTest() {
+        binding.tvSentence.visibility = View.GONE
         binding.tvSentence.text =
             targetSequences[currentSequenceIndex]     // Mostrar la frase a copiar
+
         binding.btnStart.setOnClickListener {
             startCountdown()
         }
@@ -171,6 +173,9 @@ class Test3Activity : AppCompatActivity() {
         keyEvents.clear()
         startTime = System.currentTimeMillis()
 
+        // Mostrar el texto objetivo
+        binding.tvSentence.visibility = View.VISIBLE
+
         // Configurar crónometro
         binding.chronometer.visibility = View.VISIBLE
         binding.chronometer.base = SystemClock.elapsedRealtime()
@@ -212,7 +217,7 @@ class Test3Activity : AppCompatActivity() {
             val correctPresses =
                 keyEvents.count { it.action == "INSERT" && it.correct } - incorrectPresses
             val accuracy =
-                if (totalPresses > 0) (correctPresses.toDouble() / (totalPresses - incorrectPresses) * 100) else 0.0
+                if (totalPresses > 0) (correctPresses.toDouble() / (totalPresses) * 100) else 0.0
             val speed = if (totalTime > 0) totalPresses / (totalTime / 1000.0) else 0.0
 
             val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
@@ -294,6 +299,8 @@ class Test3Activity : AppCompatActivity() {
         binding.etInput.text.clear()
         binding.etInput.isEnabled = true
         binding.etInput.visibility = View.GONE
+        // Ocultar el texto objetivo
+        binding.tvSentence.visibility = View.GONE
         // Detener y ocultar cronómetro
         binding.chronometer.visibility = View.GONE
         binding.chronometer.stop()

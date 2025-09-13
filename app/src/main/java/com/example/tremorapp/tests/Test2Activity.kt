@@ -196,7 +196,7 @@ class Test2Activity : AppCompatActivity() {
             val correctPresses =
                 keyEvents.count { it.action == "INSERT" && it.correct } - incorrectPresses
             val accuracy =
-                if (totalPresses > 0) (correctPresses.toDouble() / (totalPresses - incorrectPresses) * 100) else 0.0
+                if (totalPresses > 0) (correctPresses.toDouble() / (totalPresses) * 100) else 0.0
             val speed = if (totalTime > 0) totalPresses / (totalTime / 1000.0) else 0.0
 
             val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)

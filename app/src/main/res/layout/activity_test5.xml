@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    android:padding="16dp"
+    android:padding="0dp"
     tools:context=".tests.Test5Activity">
 
     <!-- Barra superioir -->
