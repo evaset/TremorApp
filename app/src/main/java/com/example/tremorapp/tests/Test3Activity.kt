@@ -76,6 +76,7 @@ class Test3Activity : AppCompatActivity() {
 
     // Función para configurar el test
     private fun setupTest() {
+        binding.tvInstruction.visibility = View.VISIBLE
         binding.tvSentence.visibility = View.GONE
         binding.tvSentence.text =
             targetSequences[currentSequenceIndex]     // Mostrar la frase a copiar
@@ -169,6 +170,7 @@ class Test3Activity : AppCompatActivity() {
 
     // Función para iniciar el test
     private fun startTest() {
+        binding.tvInstruction.visibility = View.GONE
         testStarted = true
         keyEvents.clear()
         startTime = System.currentTimeMillis()
@@ -313,6 +315,8 @@ class Test3Activity : AppCompatActivity() {
         testStarted = false
         currentSequenceIndex = 0
         binding.tvSentence.text = targetSequences[currentSequenceIndex]
+        // Hacer visible las instrucciones
+        binding.tvInstruction.visibility = View.VISIBLE
     }
 }
 

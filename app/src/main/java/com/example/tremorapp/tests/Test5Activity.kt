@@ -97,6 +97,7 @@ class Test5Activity : AppCompatActivity() {
 
     // Función para configurar el test
     private fun setupTest() {
+        binding.tvInstruction.visibility = View.VISIBLE
         binding.btnStart.setOnClickListener {
             startCountdown()
         }
@@ -167,7 +168,7 @@ class Test5Activity : AppCompatActivity() {
     // Función para verificar si una pulsación está cerca del tiempo esperado
     private fun isCloseToExpectedTime(currentTime: Long): Boolean {
         // Consideramos correcto si está dentro de ±300ms del tiempo esperado
-        return expectedPressTimes.any {expectedTime ->
+        return expectedPressTimes.any { expectedTime ->
             val adjustedExpected = expectedTime + INITIAL_DELAY_MS
             Math.abs(adjustedExpected - currentTime) <= 300
         }
@@ -187,6 +188,7 @@ class Test5Activity : AppCompatActivity() {
     // Función para inicciar la cuenta regresiva de 3 segundos
     private fun startCountdown() {
         binding.btnStart.isEnabled = false
+        binding.btnStart.visibility = View.GONE
         binding.tvCountdown.visibility = View.VISIBLE
 
         object : CountDownTimer(3000, 1000) {
@@ -202,6 +204,7 @@ class Test5Activity : AppCompatActivity() {
 
     // Función para iniciar el test
     private fun startTest() {
+        binding.tvInstruction.visibility = View.GONE
         testStarted = true
         keyEvents.clear()
         expectedPressTimes.clear()
@@ -351,8 +354,9 @@ class Test5Activity : AppCompatActivity() {
                 // Agregar tiempos esperados
                 val expectedArray = JSONArray()
                 expectedPressTimes.forEach {
-                    expectedArray.put(it)}
-                    put("expected_times", expectedArray)
+                    expectedArray.put(it)
+                }
+                put("expected_times", expectedArray)
 
             }
 
@@ -360,7 +364,7 @@ class Test5Activity : AppCompatActivity() {
             val fileName = "test5_${getUsername()}_${System.currentTimeMillis()}.json"
             File(filesDir, fileName).writeText(testData.toString())
 
-        //Marcar test como completado para este usuario
+            //Marcar test como completado para este usuario
             with(sharedPref.edit()) {
                 putBoolean("${getUsername()}_test5_completed", true)
                 apply()
@@ -417,8 +421,9 @@ class Test5Activity : AppCompatActivity() {
         // Detener y ocultar cronómetro
         binding.chronometer.visibility = View.GONE
         binding.chronometer.stop()
-        //Reactivar el botón de inicio
+        //Reactivar el botón de inicio y hacerlo visible
         binding.btnStart.isEnabled = true
+        binding.btnStart.visibility = View.VISIBLE
         //Restablecer el contador
         binding.tvCountdown.text = ""
         // Reiniciar estado del test
@@ -426,6 +431,8 @@ class Test5Activity : AppCompatActivity() {
         keyEvents.clear()
         expectedPressTimes.clear()
         actualPressTimes.clear()
+        // Hacer visible las instrucciones
+        binding.tvInstruction.visibility = View.VISIBLE
     }
 
     // Limpiar recursos cuando la actividad es destruida

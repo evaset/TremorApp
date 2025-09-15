@@ -74,6 +74,7 @@ class Test6Activity : AppCompatActivity() {
 
     // Función para configurar el test
     private fun setupTest() {
+        binding.tvInstruction.visibility = View.VISIBLE
         // Mostrar la frase a copiar
         binding.tvSentence.text = targetText
 
@@ -126,7 +127,7 @@ class Test6Activity : AppCompatActivity() {
                 lastText = newText
 
                 // Verificar si completó la frase
-                if (newText.equals(targetText, ignoreCase = true)){
+                if (newText.equals(targetText, ignoreCase = true)) {
                     endTest()
                 }
             }
@@ -152,8 +153,9 @@ class Test6Activity : AppCompatActivity() {
         }.start()
     }
 
-   // Función para iniciar el test
+    // Función para iniciar el test
     private fun startTest() {
+        binding.tvInstruction.visibility = View.GONE
         testStarted = true
         keyEvents.clear()
         startTime = System.currentTimeMillis()
@@ -176,7 +178,7 @@ class Test6Activity : AppCompatActivity() {
         imm.showSoftInput(binding.etInput, InputMethodManager.SHOW_IMPLICIT)
 
         // Temporizador de 15 segundos para el test completo
-        testTimer = object: CountDownTimer(15000, 1000) {
+        testTimer = object : CountDownTimer(15000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 binding.tvCountdown.text = "Tiempo restante: ${millisUntilFinished / 1000}s"
             }
@@ -208,12 +210,15 @@ class Test6Activity : AppCompatActivity() {
         try {
             val totalTime = endTime - startTime
             val totalPresses = keyEvents.count { it.action == "INSERT" }
-            val incorrectPresses =  keyEvents.count { it.action == "INSERT" && !it.correct }
-            val correctPresses =  keyEvents.count { it.action == "INSERT" && it.correct } - incorrectPresses
-            val accuracy = if (totalPresses > 0) (correctPresses.toDouble()/totalPresses * 100) else 0.0
-            val speed = if (totalTime > 0 ) totalPresses / (totalTime/1000.0) else 0.0
+            val incorrectPresses = keyEvents.count { it.action == "INSERT" && !it.correct }
+            val correctPresses =
+                keyEvents.count { it.action == "INSERT" && it.correct } - incorrectPresses
+            val accuracy =
+                if (totalPresses > 0) (correctPresses.toDouble() / totalPresses * 100) else 0.0
+            val speed = if (totalTime > 0) totalPresses / (totalTime / 1000.0) else 0.0
 
-            val completedPhrase = binding.etInput.text.toString().equals(targetText, ignoreCase = true)
+            val completedPhrase =
+                binding.etInput.text.toString().equals(targetText, ignoreCase = true)
 
             val sharedPref = getSharedPreferences("app_prefs", MODE_PRIVATE)
             val username = sharedPref.getString("username", "unknown") ?: "unknown"
@@ -308,6 +313,8 @@ class Test6Activity : AppCompatActivity() {
         // Reiniciar estado del test
         testStarted = false
         keyEvents.clear()
+        // Hacer visible las instrucciones
+        binding.tvInstruction.visibility = View.VISIBLE
     }
 
     // Cancelar el temporizador al destruir la actividad

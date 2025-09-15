@@ -90,7 +90,8 @@
                 android:lineSpacingExtra="4dp"
                 android:text="@string/test2_description"
                 android:textColor="@color/instructions"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvSentence"

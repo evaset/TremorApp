@@ -69,6 +69,7 @@ class Test1Activity : AppCompatActivity() {
 
     // Función para configurar el test
     private fun setupTest() {
+        binding.tvInstruction.visibility = View.VISIBLE
         binding.btnStart.setOnClickListener {
             startCountdown()
         }
@@ -138,7 +139,7 @@ class Test1Activity : AppCompatActivity() {
 
     // Función para iniciar el test
     private fun startTest() {
-
+        binding.tvInstruction.visibility = View.GONE
         testStarted = true
         keyEvents.clear()
         startTime = System.currentTimeMillis()
@@ -286,5 +287,7 @@ class Test1Activity : AppCompatActivity() {
         // Reiniciar estado del test
         testStarted = false
         keyEvents.clear()
+        // Hacer visible las instrucciones
+        binding.tvInstruction.visibility = View.VISIBLE
     }
 }

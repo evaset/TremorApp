@@ -85,6 +85,7 @@ class Test7Activity : AppCompatActivity() {
 
     // Función para configurar el test
     private fun setupTest() {
+        binding.tvInstruction.visibility = View.VISIBLE
         // Mostrar el primer bloque de texto
         showCurrentBlock()
 
@@ -144,7 +145,7 @@ class Test7Activity : AppCompatActivity() {
                 // Verificar si completó el bloque actual correctamente
                 if (newText.equals(currentBlock, ignoreCase = true)) {
                     // Avanzar automáticamente al siguiente bloque después de un breve retraso
-                    binding.etInput.postDelayed({nextBlock()},500)
+                    binding.etInput.postDelayed({ nextBlock() }, 500)
                 }
             }
 
@@ -202,6 +203,7 @@ class Test7Activity : AppCompatActivity() {
 
     // Función para iniciar el test
     private fun startTest() {
+        binding.tvInstruction.visibility = View.GONE
         testStarted = true
         keyEvents.clear()
         currentBlockIndex = 0
@@ -395,6 +397,8 @@ class Test7Activity : AppCompatActivity() {
         allUserTexts.clear()
         // Restablecer el texto del primer bloque
         binding.tvSentence.text = textBlocks.firstOrNull() ?: ""
+        // Hacer visible las instrucciones
+        binding.tvInstruction.visibility = View.VISIBLE
     }
 
     // Canccelar temporizador al destruir la actividad
